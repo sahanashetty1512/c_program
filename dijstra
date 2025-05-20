@@ -1,0 +1,100 @@
+#include<stdio.h>
+#include<limits.h>
+# define MAX 20
+# define INF 999
+int dist[MAX];
+int visited[MAX];
+int path[MAX];
+int source;
+void dijstra(int n,int graph[MAX][MAX]);
+int mindistence(int n);
+void printshortest(int n);
+void printpath(int path[],int j);
+int main()
+{
+    int i,j,n;
+    int graph[MAX][MAX];
+    printf("Enter the number of vertices:");
+    scanf("%d",&n);
+    printf("Enter the weight matrix");
+    for(i=1;i<=n;i++)
+    {
+        for(j=1;j<=n;j++)
+        {
+            scanf("%d",&graph[i][j]);
+        }
+    }
+    printf("Enter the source vertex");
+    scanf("%d",&source);
+    dijstra(n,graph);
+    printshortest(n);
+    return 0;
+}
+void dijstra(int n,int graph[MAX][MAX])
+{
+    int u,v,i;
+    for(i=1;i<=n;i++)
+    {
+        visited[i]=0;
+    }
+    visited[source]=1;
+    for(i=1;i<=n;i++)
+    {
+        dist[i]=graph[source][i];
+    }
+        for(i=1;i<=n;i++)
+        {
+            path[i]=source;
+        }
+        path[source]=-1;
+        for(i=1;i<n;i++)
+        {
+            u=mindistence(n);
+            visited[u]=1;
+        for(v=1;v<=n;v++)
+        {
+            if(!visited[v] && graph[u][v] && dist[u]!=INF && dist[u]+graph[u][v]<dist[v])
+            {
+                dist[v]=dist[u]+graph[u][v];
+                path[v]=u;
+            }
+        }
+    }
+}
+int mindistence(int n)
+{
+    int min=INF,minindex=-1,i;
+    for(i=1;i<=n;i++)
+    {
+        if(visited[i]==0 && dist[i]<=min)
+        {
+            min=dist[i];
+            minindex=i;
+        }
+    }
+    return minindex;
+}
+void printshortest(int n)
+{
+    int i;
+    for(i=1;i<=n;i++)
+    {
+        if(i!=source)
+        {
+            printf("shortest distence from node %d to %d : %d",source,i,dist[i]);
+            printf("shortest path from node %d to %d is",source,i);
+            printf("%d",source);
+            printpath(path,i);
+            printf("\n");
+        }
+    }
+}
+void printpath(int path[],int j)
+{
+    if(path[j]==-1)
+    {
+        return;
+    }
+    printpath(path,path[j]);
+    printf("---->%d",j);
+}
